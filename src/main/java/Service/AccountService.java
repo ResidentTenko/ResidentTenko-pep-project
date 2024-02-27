@@ -30,7 +30,7 @@ public class AccountService {
      * if the username is not blank, 
      * the password is at least 4 characters long, 
      * and an Account with that username does not already exist
-     * @param account an account object.
+     * @param account - an account object.
      * @return Account if the persisted account was successful
      * Else null if it was not successfully persisted (eg if the account does not satisfy the above criteria)
      */
@@ -47,7 +47,7 @@ public class AccountService {
             return null;
         }
         // Check if an Account with that username does not already exist
-        Account existingAccount = accountDAO.getAccountByUsername(account.getUsername());
+        Account existingAccount = accountDAO.retrieveAccountByUsername(account.getUsername());
         if (existingAccount != null) 
         {
             return null;
@@ -58,26 +58,20 @@ public class AccountService {
     }
 
     /**
-     * TODO: Use the bookDAO to persist a book to the database.
-     * An ISBN will be provided in Book. Method should check if the book ISBN already exists before it attempts to
-     * persist it.
-     * @param book a book object.
-     * @return book if it was successfully persisted, null if it was not successfully persisted (eg if the book primary
-     * key was already in use.)
-     
-    public Book addBook(Book book) {
-        // Check if the book with the given ISBN already exists
-        Book existingBook = bookDAO.getBookByIsbn(book.getIsbn());
-        if (existingBook == null) 
+     * Use the AccountDAO to return an Account. The given Account will not have an id provided.
+     * @param account an account object.
+     * @return Account if the account exists or null if it doesn't
+     */
+    public Account getAccount(Account account) {
+        Account existingAccount = accountDAO.retrieveAccount(account);
+        
+        if (existingAccount != null) 
         {
-            // Book with the given ISBN does not exist, proceed with insertion
-            return bookDAO.insertBook(book);
+            return existingAccount;
         } 
         else 
         {
-            // Book with the given ISBN already exists
             return null;
         }
     }
-    */
 }

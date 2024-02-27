@@ -8,6 +8,8 @@ import java.sql.*;
 public class AccountDAO {
     /**
      * Insert a new account into the Accounts table.
+     * @param account - an account object
+     * @return an account object if no errors occur
      */
     public Account insertAccount(Account account){
         Connection connection = ConnectionUtil.getConnection();
@@ -32,10 +34,37 @@ public class AccountDAO {
     }
 
     /**
+     * Retrieve an account from the Accounts table, identified by its username and password.
+     * @param account - an account object
+     * @return an account identified by username and password.
+     */
+    public Account retrieveAccount(Account account) {
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "SELECT * FROM account WHERE username = ? AND password = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    
+            preparedStatement.setString(1, account.getUsername());
+            preparedStatement.setString(2, account.getPassword());
+    
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int accountId = resultSet.getInt("account_id");
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                return new Account(accountId, username, password);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    /**
      * Retrieve an account from the Accounts table, identified by its username.
      * @return an account identified by username.
      * */
-    public Account getAccountByUsername(String username) {
+    public Account retrieveAccountByUsername(String username) {
         Connection connection = ConnectionUtil.getConnection();
         try {
             String sql = "SELECT * FROM account WHERE username = ?";
