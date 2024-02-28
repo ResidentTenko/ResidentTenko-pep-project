@@ -30,9 +30,8 @@ public class AccountService {
      * if the username is not blank, 
      * the password is at least 4 characters long, 
      * and an Account with that username does not already exist
-     * @param account - an account object.
+     * @param account - an Account object.
      * @return Account if the persisted account was successful
-     * Else null if it was not successfully persisted (eg if the account does not satisfy the above criteria)
      */
     public Account addAccount(Account account) {
         // Check if the username is not blank
@@ -59,7 +58,7 @@ public class AccountService {
 
     /**
      * Use the AccountDAO to return an Account. The given Account will not have an id provided.
-     * @param account an account object.
+     * @param account an Account object.
      * @return Account if the account exists or null if it doesn't
      */
     public Account getAccount(Account account) {

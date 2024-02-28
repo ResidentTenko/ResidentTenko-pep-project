@@ -8,8 +8,8 @@ import java.sql.*;
 public class AccountDAO {
     /**
      * Insert a new account into the Accounts table.
-     * @param account - an account object
-     * @return an account object if no errors occur
+     * @param account - an Account object
+     * @return an Account object if no errors occur
      */
     public Account insertAccount(Account account){
         Connection connection = ConnectionUtil.getConnection();
@@ -35,7 +35,7 @@ public class AccountDAO {
 
     /**
      * Retrieve an account from the Accounts table, identified by its username and password.
-     * @param account - an account object
+     * @param account - an Account object
      * @return an account identified by username and password.
      */
     public Account retrieveAccount(Account account) {
@@ -75,6 +75,30 @@ public class AccountDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 int accountId = resultSet.getInt("account_id");
+                String password = resultSet.getString("password");
+                return new Account(accountId, username, password);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Retrieve an account from the Accounts table, identified by its ID.
+     * @return an account identified by ID.
+     * */
+    public Account retrieveAccountById(int accountId) {
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "SELECT * FROM account WHERE account_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    
+            preparedStatement.setInt(1, accountId);
+    
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                String username = resultSet.getString("username");
                 String password = resultSet.getString("password");
                 return new Account(accountId, username, password);
             }
