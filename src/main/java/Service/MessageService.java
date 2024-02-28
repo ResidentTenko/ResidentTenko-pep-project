@@ -47,8 +47,15 @@ public class MessageService {
         {
             return null;
         }
-
         // If all checks pass, insert the message
         return messageDAO.insertMessage(message);
+    }
+
+    /**
+     * Uses the messageDAO to retrieve all messages.
+     * @return all messages.
+     */
+    public List<Message> getAllMessages() {
+        return messageDAO.retrieveAllMessages();
     }
 }

@@ -7,7 +7,7 @@ import java.sql.*;
 
 public class AccountDAO {
     /**
-     * Insert a new account into the Accounts table.
+     * Inserts a new account into the Accounts table.
      * @param account - an Account object
      * @return an Account object if no errors occur
      */
@@ -34,7 +34,7 @@ public class AccountDAO {
     }
 
     /**
-     * Retrieve an account from the Accounts table, identified by its username and password.
+     * Retrieves an account from the Accounts table, identified by its username and password.
      * @param account - an Account object
      * @return an account identified by username and password.
      */
@@ -61,7 +61,7 @@ public class AccountDAO {
     }
 
     /**
-     * Retrieve an account from the Accounts table, identified by its username.
+     * Retrieves an account from the Accounts table, identified by its username.
      * @return an account identified by username.
      * */
     public Account retrieveAccountByUsername(String username) {
@@ -85,7 +85,7 @@ public class AccountDAO {
     }
 
     /**
-     * Retrieve an account from the Accounts table, identified by its ID.
+     * Retrieves an account from the Accounts table, identified by its ID.
      * @return an account identified by ID.
      * */
     public Account retrieveAccountById(int accountId) {
