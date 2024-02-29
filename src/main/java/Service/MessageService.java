@@ -74,4 +74,34 @@ public class MessageService {
     public void deleteMessage(Message message) {
         messageDAO.removeMessage(message);
     }
+
+    /**
+     * Uses the messageDAO to update a nessage identified by its Id.
+     * @return message - A message object
+     */
+    public Message updateMessage(Message message)
+    {
+        // get the message that matches the id of the message param
+        Message databaseMessage = this.getMessageById(message.getMessage_id());
+
+        // if the message doesn't exist return null
+        if(databaseMessage == null)
+        {
+            return null;
+        }
+
+        // Check if the message is blank or is the right length
+        if (message.getMessage_text().trim().isEmpty() || message.getMessage_text().length() > 255) 
+        {
+            return null;
+        }
+
+        // if the message is valid then update the text of the database message
+        databaseMessage.setMessage_text(message.getMessage_text());
+        // input the updated message into the database
+        messageDAO.updateMessage(databaseMessage);
+
+        // return the updated message
+        return databaseMessage;
+    }
 }

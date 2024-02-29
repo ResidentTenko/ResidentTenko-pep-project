@@ -95,11 +95,29 @@ public class MessageDAO {
         try {
             String sql = "DELETE * FROM message WHERE message_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-    
             preparedStatement.setInt(1, message.getMessage_id());
-    
             preparedStatement.executeQuery();
-            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Update an existing message in the database
+     * @param message - the message to update.
+     * @return nothing
+     */
+
+    public void updateMessage(Message message) {
+        Connection connection = ConnectionUtil.getConnection();
+        try{
+            String sql = "UPDATE message SET posted_by = ?, message_text = ?, time_posted_epoch = ? WHERE message_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);       
+            preparedStatement.setInt(1, message.getPosted_by());
+            preparedStatement.setString(2, message.getMessage_text());
+            preparedStatement.setLong(3, message.getTime_posted_epoch());
+            preparedStatement.setInt(4, message.getMessage_id());
+            preparedStatement.executeQuery();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

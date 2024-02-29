@@ -38,6 +38,7 @@ public class SocialMediaController {
         app.get("/messages", this::getAllMessagesHandler);
         app.get("/messages/{message_id}", this::getMessageByIdHandler);
         app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
+        app.patch("/messages/{message_id}", this::updateMessageByIdHandler);
         return app;
     }
 
@@ -100,7 +101,7 @@ public class SocialMediaController {
      * @param ctx the context object handles information HTTP requests and generates responses within Javalin. It will
      *            be available to this method automatically thanks to the app.put method.
      */
-    public void getAllMessagesHandler(Context ctx){
+    private void getAllMessagesHandler(Context ctx) {
         List<Message> messages = messageService.getAllMessages();
         ctx.json(messages);
     }
@@ -110,7 +111,7 @@ public class SocialMediaController {
      * @param ctx the context object handles information HTTP requests and generates responses within Javalin. It will
      *            be available to this method automatically thanks to the app.put method.
      */
-    public void getMessageByIdHandler(Context ctx){
+    private void getMessageByIdHandler(Context ctx) throws JsonProcessingException{
         int id = Integer.parseInt(ctx.pathParam("message_id"));
         Message message = messageService.getMessageById(id);
         if (message != null) 
@@ -132,7 +133,7 @@ public class SocialMediaController {
      * @param ctx the context object handles information HTTP requests and generates responses within Javalin. It will
      *            be available to this method automatically thanks to the app.put method.
      */
-    public void deleteMessageByIdHandler(Context ctx){
+    private void deleteMessageByIdHandler(Context ctx) throws JsonProcessingException{
         int id = Integer.parseInt(ctx.pathParam("message_id"));
         Message message = messageService.getMessageById(id);
         // if the message exists, delete it
@@ -149,6 +150,32 @@ public class SocialMediaController {
             // Return a 200 status even if the message is not found
             ctx.status(200);
             ctx.result("");
+        }
+    }
+
+    /**
+     * Handler to update a message identified by Id.
+     * @param ctx the context object handles information HTTP requests and generates responses within Javalin. It will
+     *            be available to this method automatically thanks to the app.put method.
+     */
+    private void updateMessageByIdHandler(Context ctx) throws JsonProcessingException{
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
+        int id = Integer.parseInt(ctx.pathParam("message_id"));
+        // update the id first just in case
+        // the request body is not guaranteed to contain the actual id (only the param)
+        message.setMessage_id(id);
+        // Update the message with the new content
+        Message updatedMessage = messageService.updateMessage(message);
+        if (updatedMessage != null)
+        {
+            ctx.status(200);
+            ctx.json(updatedMessage);
+        } 
+        else 
+        {
+            // 400 if the message is not updated
+            ctx.status(400);
         }
     }
 }
