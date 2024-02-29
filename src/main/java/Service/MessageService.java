@@ -66,4 +66,12 @@ public class MessageService {
     public Message getMessageById(int messageId) {
         return messageDAO.retrieveMessageById(messageId);
     }
+
+    /**
+     * Uses the messageDAO to remove a nessage identified by its Id.
+     * @return nothing
+     */
+    public void deleteMessage(Message message) {
+        messageDAO.removeMessage(message);
+    }
 }

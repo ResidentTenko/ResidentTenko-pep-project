@@ -37,14 +37,12 @@ public class SocialMediaController {
         app.post("/messages", this::submitMessageHandler);
         app.get("/messages", this::getAllMessagesHandler);
         app.get("/messages/{message_id}", this::getMessageByIdHandler);
+        app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
         return app;
     }
 
     /**
      * Handler to register a new account.
-     * The Jackson ObjectMapper will automatically convert the JSON of the POST request into an Account object.
-     * If AccountService returns a null account (meaning posting an Account was unsuccessful), the API will return a 400
-     * message (client error).
      * @param ctx the context object handles information HTTP requests and generates responses within Javalin. It will
      *            be available to this method automatically thanks to the app.post method.
      * @throws JsonProcessingException will be thrown if there is an issue converting JSON into an object.
@@ -63,9 +61,6 @@ public class SocialMediaController {
 
      /**
      * Handler to retrieve an account if it exists.
-     * The Jackson ObjectMapper will automatically convert the JSON of the POST request into an Account object.
-     * If accountService returns a null account (meaning posting an account was unsuccessful), the API will return a 400
-     * message (client error).
      * @param ctx the context object handles information HTTP requests and generates responses within Javalin. It will
      *            be available to this method automatically thanks to the app.post method.
      * @throws JsonProcessingException will be thrown if there is an issue converting JSON into an object.
@@ -84,9 +79,6 @@ public class SocialMediaController {
 
     /**
      * Handler to submit a new message.
-     * The Jackson ObjectMapper will automatically convert the JSON of the POST request into an Account object.
-     * If messageService returns a null message (meaning posting a message was unsuccessful), the API will return a 400
-     * message (client error).
      * @param ctx the context object handles information HTTP requests and generates responses within Javalin. It will
      *            be available to this method automatically thanks to the app.post method.
      * @throws JsonProcessingException will be thrown if there is an issue converting JSON into an object.
@@ -104,7 +96,7 @@ public class SocialMediaController {
     }
 
     /**
-     * Handler to retrieve all messages. There is no need to change anything in this method.
+     * Handler to retrieve all messages.
      * @param ctx the context object handles information HTTP requests and generates responses within Javalin. It will
      *            be available to this method automatically thanks to the app.put method.
      */
@@ -114,7 +106,7 @@ public class SocialMediaController {
     }
 
     /**
-     * Handler to retrieve a message identified by Id. There is no need to change anything in this method.
+     * Handler to retrieve a message identified by Id.
      * @param ctx the context object handles information HTTP requests and generates responses within Javalin. It will
      *            be available to this method automatically thanks to the app.put method.
      */
@@ -128,9 +120,34 @@ public class SocialMediaController {
         else 
         {
             // If the message is not found, set the response status to 200 (OK)
-            // As per test expectations, return a 200 status even if the message is not found
+            // Return a 200 status even if the message is not found
             ctx.status(200);
             // Return empty response body if nmessage is not found
+            ctx.result("");
+        }
+    }
+
+    /**
+     * Handler to delete a message identified by Id.
+     * @param ctx the context object handles information HTTP requests and generates responses within Javalin. It will
+     *            be available to this method automatically thanks to the app.put method.
+     */
+    public void deleteMessageByIdHandler(Context ctx){
+        int id = Integer.parseInt(ctx.pathParam("message_id"));
+        Message message = messageService.getMessageById(id);
+        // if the message exists, delete it
+        // then return the message saved in variable in the json
+        if (message != null)
+        {
+            messageService.deleteMessage(message);
+            ctx.status(200);
+            ctx.json(message);
+        } 
+        else 
+        {
+            // If the message is not found, set the response status to 200 (OK)
+            // Return a 200 status even if the message is not found
+            ctx.status(200);
             ctx.result("");
         }
     }
