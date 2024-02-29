@@ -58,4 +58,12 @@ public class MessageService {
     public List<Message> getAllMessages() {
         return messageDAO.retrieveAllMessages();
     }
+
+    /**
+     * Uses the messageDAO to retrieve a nessage identified by its Id.
+     * @return message - a message object.
+     */
+    public Message getMessageById(int messageId) {
+        return messageDAO.retrieveMessageById(messageId);
+    }
 }

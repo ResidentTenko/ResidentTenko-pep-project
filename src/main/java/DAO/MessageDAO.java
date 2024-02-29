@@ -60,4 +60,29 @@ public class MessageDAO {
         }
         return messages;
     }
+
+    /**
+     * Retrieves a message from the Message table, identified by the messageId.
+     * @return an account identified by username.
+     * */
+    public Message retrieveMessageById(int messageId) {
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "SELECT * FROM message WHERE message_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    
+            preparedStatement.setInt(1, messageId);
+    
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int postedBy = resultSet.getInt("posted_by");
+                String messageText = resultSet.getString("message_text");
+                Long timePosted = resultSet.getLong("time_posted_epoch");
+                return new Message(messageId, postedBy, messageText, timePosted);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
 }

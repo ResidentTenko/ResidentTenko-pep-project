@@ -36,6 +36,7 @@ public class SocialMediaController {
         app.post("/login", this::loginAccountHandler);
         app.post("/messages", this::submitMessageHandler);
         app.get("/messages", this::getAllMessagesHandler);
+        app.get("/messages/{message_id}", this::getMessageByIdHandler);
         return app;
     }
 
@@ -110,5 +111,27 @@ public class SocialMediaController {
     public void getAllMessagesHandler(Context ctx){
         List<Message> messages = messageService.getAllMessages();
         ctx.json(messages);
+    }
+
+    /**
+     * Handler to retrieve a message identified by Id. There is no need to change anything in this method.
+     * @param ctx the context object handles information HTTP requests and generates responses within Javalin. It will
+     *            be available to this method automatically thanks to the app.put method.
+     */
+    public void getMessageByIdHandler(Context ctx){
+        int id = Integer.parseInt(ctx.pathParam("message_id"));
+        Message message = messageService.getMessageById(id);
+        if (message != null) 
+        {
+            ctx.json(message);
+        } 
+        else 
+        {
+            // If the message is not found, set the response status to 200 (OK)
+            // As per test expectations, return a 200 status even if the message is not found
+            ctx.status(200);
+            // Return empty response body if nmessage is not found
+            ctx.result("");
+        }
     }
 }
