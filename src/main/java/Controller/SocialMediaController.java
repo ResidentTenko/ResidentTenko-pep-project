@@ -39,6 +39,7 @@ public class SocialMediaController {
         app.get("/messages/{message_id}", this::getMessageByIdHandler);
         app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
         app.patch("/messages/{message_id}", this::updateMessageByIdHandler);
+        app.get("/accounts/{account_id}/messages", this::getMessagesByAccountIdHandler);
         return app;
     }
 
@@ -176,6 +177,24 @@ public class SocialMediaController {
         {
             // 400 if the message is not updated
             ctx.status(400);
+        }
+    }
+
+     /**
+     * Handler to retrieve all messages identified by a user Id.
+     * @param ctx the context object handles information HTTP requests and generates responses within Javalin. It will
+     *            be available to this method automatically thanks to the app.put method.
+     */
+    private void getMessagesByAccountIdHandler(Context ctx) throws JsonProcessingException{
+        int accountId  = Integer.parseInt(ctx.pathParam("account_id"));
+        List<Message> messages = messageService.getMessagesByAccountId(accountId);
+        if (!messages.isEmpty()) {
+            // Send the messages as a Json response
+            ctx.json(messages);
+        } else {
+            // If no messages are found, send an empty JSON response
+            ctx.json(messages);
+            ctx.status(200);
         }
     }
 }

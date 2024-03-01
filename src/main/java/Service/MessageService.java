@@ -104,4 +104,12 @@ public class MessageService {
         // return the updated message
         return databaseMessage;
     }
+
+    /**
+     * Uses the messageDAO to retrieve all nessages identified by a user Id.
+     * @return a list of message objects.
+     */
+    public List<Message> getMessagesByAccountId(int accountId) {
+        return messageDAO.retrieveMessagesByAccountId(accountId);
+    }
 }
